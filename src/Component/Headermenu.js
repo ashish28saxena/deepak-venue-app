@@ -303,7 +303,7 @@ function HeaderMenu({ onCitySelect, shortlistCount = 0 }) {
           <nav className="hm-group hm-info" aria-label="Company">
             {INFO_ITEMS.map((l) => (
               <a key={l.label} className="hm-row hm-row-small" href={l.href} onClick={close}>
-                <span className="hm-icon hm-icon-plain">{l.icon}</span>
+                <span className="hm-icon hm-icon-plain">{l.icon} ********</span>
                 <span className="hm-label">{l.label}</span>
                 <span className="hm-chevron">{icons.chevron}</span>
               </a>

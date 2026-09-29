@@ -67,9 +67,9 @@ const icons = {
 };
 
 /* ---------- Data (yahan se edit karo) ---------- */
-const PHONE = "+91 8124222266";
-const EMAIL = "support@yourwebsite.com"; // apna email daalo
-const WHATSAPP = "918124222266";
+const PHONE = "+91 8630955571";
+const EMAIL = "support@shubhlagnmart.com"; // apna email daalo
+const WHATSAPP = "918630955571";
 const BRAND_NAME = "Shubhlagnmart";
 const DEFAULT_LOGO = "/logo-web.jpeg"; // public/ folder mein hai to ye chalega
 

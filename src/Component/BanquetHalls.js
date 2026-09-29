@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; 
 import "./BanquetHalls.css";
@@ -84,11 +85,16 @@ function BanquetHallsCard({ venue }) {
       </div>
 
       <div className="venue-body">
-        <h5 className="venue-name">{venue.name}</h5>
-        <a href="#!" className="venue-city">
-          <i className="bi bi-geo-alt-fill me-1"></i>
-          {venue.city}
-        </a>
+        
+        <Link to={`/venues/banquet-halls/${venue.id}`} >
+    
+    <h5 className="venue-name">{venue.name}</h5>
+</Link>
+        
+        <Link to={`/venues/banquet-halls/${venue.id}`} className="venue-city">
+    <i className="bi bi-geo-alt-fill me-1"></i>
+    {venue.city}
+</Link>
         <p className="venue-price">
           {venue.price
             ? `₹${venue.price.toLocaleString("en-IN")}`

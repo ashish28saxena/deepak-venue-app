@@ -60,9 +60,9 @@ const icons = {
 };
 
 /* ---------- Content (yahan se edit karo) ---------- */
-const PHONE = "+91 8124222266";
-const WHATSAPP = "918124222266";
-const EMAIL = "support@yourwebsite.com"; // apna asli email daalo
+const PHONE = "+91 8630955571";
+const WHATSAPP = "918630955571";
+const EMAIL = "support@shubhlagnmart.com"; // apna asli email daalo
 const ADDRESS = "Etawah, Uttar Pradesh"; // poora address yahan likh sakte ho
 const HOURS = "Mon to Sat, 10:00 AM to 7:00 PM"; // apna asli time daalo
 const MAP_SRC = ""; // Google Maps "Embed a map" ka src yahan paste karo (optional)

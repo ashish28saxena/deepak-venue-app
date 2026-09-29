@@ -59,8 +59,8 @@ const icons = {
 
 /* ---------- Content (yahan se edit karo) ---------- */
 const BRAND_NAME = "Shubhlagnmart";
-const PHONE = "+91 8124222266";
-const WHATSAPP = "918124222266";
+const PHONE = "+91 8630955571";
+const WHATSAPP = "918630955571";
 
 const VENUE_TYPES = ["Banquet Halls", "Lawns", "Resorts", "Marriage Gardens", "Farmhouses"];
 

@@ -130,6 +130,7 @@
 
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import HeaderMenu from "./Headermenu";
 import "./Header.css";
 
@@ -205,8 +206,8 @@ const NAV = [
   { label: "Lawns", href: "/venues/lawns" },
   { label: "Resorts", href: "/venues/resorts" },
   { label: "Gardens", href: "/venues/gardens" },
-  { label: "About Us", href: "/venues/gardens" },
-  { label: "Contact Us", href: "/venues/gardens" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const CITIES = ["Etawah", "Agra", "Kanpur", "Lucknow", "Mainpuri", "Firozabad"];
