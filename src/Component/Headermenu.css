@@ -1,0 +1,360 @@
+/* Brand tokens - apne theme ke hisaab se badal sakte ho */
+.hm-drawer,
+.hm-trigger {
+  --hm-red: #d7263d;
+  --hm-red-soft: #fdecef;
+  --hm-navy: #0d3a66;
+  --hm-navy-deep: #082a4d;
+  --hm-ink: #1c2430;
+  --hm-muted: #6b7686;
+  --hm-line: #e8ebf0;
+  --hm-bg: #ffffff;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+/* ---------- Trigger ---------- */
+.hm-trigger {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--hm-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--hm-ink);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.hm-trigger:hover {
+  border-color: var(--hm-red);
+  color: var(--hm-red);
+}
+
+/* ---------- Overlay ---------- */
+.hm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(8, 20, 40, 0.5);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.hm-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------- Drawer ---------- */
+.hm-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  width: min(360px, 88vw);
+  height: 100dvh;
+  background: var(--hm-bg);
+  color: var(--hm-ink);
+  box-shadow: 12px 0 40px rgba(8, 20, 40, 0.18);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.35s;
+}
+.hm-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* ---------- Top ---------- */
+.hm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 18px;
+  background: linear-gradient(135deg, var(--hm-red-soft), #fff 70%);
+  border-bottom: 1px solid var(--hm-line);
+}
+.hm-welcome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hm-avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--hm-red);
+  border: 1.5px solid var(--hm-red);
+}
+.hm-welcome-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--hm-navy);
+}
+.hm-welcome-link {
+  font-size: 13px;
+  color: var(--hm-red);
+  text-decoration: none;
+  font-weight: 500;
+}
+.hm-welcome-link:hover {
+  text-decoration: underline;
+}
+.hm-close {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--hm-ink);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(8, 20, 40, 0.12);
+  transition: transform 0.25s, color 0.2s;
+}
+.hm-close:hover {
+  color: var(--hm-red);
+  transform: rotate(90deg);
+}
+
+/* ---------- Scroll area ---------- */
+.hm-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #cfd6e0 transparent;
+}
+.hm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ---------- Rows ---------- */
+.hm-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.hm-row:hover,
+.hm-item.is-open > .hm-row {
+  background: #f5f7fa;
+}
+.hm-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--hm-red-soft);
+  color: var(--hm-red);
+}
+.hm-icon-plain {
+  width: 34px;
+  height: 34px;
+  background: #f1f4f8;
+  color: var(--hm-navy);
+}
+.hm-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.hm-label {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--hm-ink);
+}
+.hm-hint {
+  font-size: 12px;
+  color: var(--hm-muted);
+  line-height: 1.3;
+}
+.hm-row-small {
+  padding: 8px 12px;
+}
+.hm-row-small .hm-label {
+  font-size: 14px;
+}
+.hm-chevron {
+  display: grid;
+  color: #9aa5b4;
+  transition: transform 0.25s, color 0.2s;
+}
+.hm-row:hover .hm-chevron {
+  color: var(--hm-red);
+}
+.hm-item.is-open > .hm-row .hm-chevron {
+  transform: rotate(90deg);
+  color: var(--hm-red);
+}
+.hm-badge {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--hm-red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ---------- Expandable content ---------- */
+.hm-sub {
+  margin: 2px 0 6px 32px;
+  padding-left: 22px;
+  border-left: 2px solid var(--hm-red-soft);
+}
+.hm-sub ul {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+.hm-sub li a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--hm-ink);
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.hm-sub li a:hover {
+  background: var(--hm-red-soft);
+  color: var(--hm-red);
+}
+.hm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0 6px;
+}
+.hm-chip {
+  padding: 6px 14px;
+  border: 1px solid var(--hm-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--hm-ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.hm-chip:hover {
+  border-color: var(--hm-red);
+  background: var(--hm-red-soft);
+  color: var(--hm-red);
+}
+
+/* ---------- Helpline (memorable element) ---------- */
+.hm-helpline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 2px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--hm-navy), var(--hm-navy-deep));
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hm-helpline:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(13, 58, 102, 0.3);
+}
+.hm-helpline-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--hm-red);
+}
+.hm-helpline-title {
+  display: block;
+  font-size: 12px;
+  opacity: 0.8;
+}
+.hm-helpline-number {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ---------- Info ---------- */
+.hm-info {
+  padding-bottom: 8px;
+}
+
+/* ---------- Footer ---------- */
+.hm-footer {
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--hm-line);
+  background: #fafbfc;
+}
+.hm-footer p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--hm-muted);
+}
+.hm-socials {
+  display: flex;
+  gap: 10px;
+}
+.hm-socials a {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #f3c4cb;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--hm-red);
+  transition: all 0.2s;
+}
+.hm-socials a:hover {
+  background: var(--hm-red);
+  color: #fff;
+  border-color: var(--hm-red);
+}
+
+/* ---------- Focus & motion ---------- */
+.hm-drawer :focus-visible,
+.hm-trigger:focus-visible {
+  outline: 2px solid var(--hm-red);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-drawer,
+  .hm-overlay,
+  .hm-chevron,
+  .hm-close {
+    transition: none;
+  }
+}
