@@ -2,9 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./Venuedetail.css";
 
-/* ---------- Data (yahan se venues edit / add karo) ----------
-   Baad me isko API / alag data file se replace kar sakte ho.
-   Key = URL slug  ->  /venues/lawns/gayatridham-vatika            */
+
 export const VENUES = {
   "gayatridham-vatika": {
     name: "Gayatridham Vatika",
@@ -16,7 +14,7 @@ export const VENUES = {
     priceUnit: "Per Day",
     rating: 4.5,
     phone: "+91 8124222266",
-    images: ["/venues/gayatridham-1.jpg", "/venues/gayatridham-2.jpg", "/venues/gayatridham-3.jpg"],
+    images: ["https://picsum.photos/seed/garden1/700/640", "https://picsum.photos/seed/garden2/700/640", "https://picsum.photos/seed/garden3/700/640"],
     highlights: ["300 Hall capacity", "20 car parking", "Air conditioning", "7 Rooms"],
     amenities: [
       "7 Rooms available",
@@ -47,12 +45,7 @@ export const VENUES = {
   },
 };
 
-const SIMILAR = [
-  { slug: "vrindavan-garden", name: "Vrindavan Garden", price: "₹1,00,000", img: "/venues/vrindavan.jpg", rating: 4.5 },
-  { slug: "jp-garden", name: "JP Garden", price: "₹500 - 750", img: "/venues/jp.jpg", rating: 4.5 },
-  { slug: "kr-resort", name: "KR Resort", price: "Contact for details", img: "/venues/kr.jpg", rating: 4.5 },
-  { slug: "shri-krishna-utsav-garden", name: "Shri Krishna Utsav Garden", price: "₹65,000", img: "/venues/krishna.jpg", rating: 4.5 },
-];
+
 
 const TABS = [
   { id: "amenities", label: "Venue Amenities" },
@@ -133,7 +126,7 @@ function Gallery({ images, rating, alt }) {
 
   return (
     <div className="vd-gallery">
-      {broken[i] || !images.length ? (
+      {!images.length ? (
         <div className="vd-noimg">Photo coming soon</div>
       ) : (
         <img
@@ -200,7 +193,7 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
   const saved = onToggleShortlist ? shortlist.includes(slug) : localSaved;
   const toggleSave = () => (onToggleShortlist ? onToggleShortlist(slug) : setLocalSaved((s) => !s));
 
-  const similar = useMemo(() => SIMILAR.filter((s) => s.slug !== slug), [slug]);
+  
 
   const share = async () => {
     const url = window.location.href;
@@ -234,20 +227,7 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
 
   return (
     <main className="vd">
-      {/* Breadcrumb */}
-      <nav className="vd-crumbs" aria-label="Breadcrumb">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <Link to={venue.typeHref}>{venue.type}</Link>
-        <span>/</span>
-        <Link to={venue.typeHref}>
-          {venue.type} in {venue.city}
-        </Link>
-        <span>/</span>
-        <span className="vd-current">{venue.name}</span>
-      </nav>
-
-      {/* Top card */}
+      
       <section className="vd-card vd-top">
         <Gallery images={venue.images} rating={venue.rating} alt={venue.name} />
 
@@ -347,26 +327,7 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
           </section>
         </div>
 
-        {/* Sidebar */}
-        <aside className="vd-side">
-          <div className="vd-side-head">
-            <h3>You may also like</h3>
-            <Link to={venue.typeHref}>View all</Link>
-          </div>
-
-          {similar.map((s) => (
-            <Link key={s.slug} to={`/venues/lawns/${s.slug}`} className="vd-mini">
-              <img src={s.img} alt="" loading="lazy" onError={(e) => (e.currentTarget.style.visibility = "hidden")} />
-              <div>
-                <span className="vd-mini-rate">
-                  {I.star} {s.rating} <em>No Reviews</em>
-                </span>
-                <strong>{s.name}</strong>
-                <span className="vd-mini-price">{s.price}</span>
-              </div>
-            </Link>
-          ))}
-        </aside>
+        
       </div>
     </main>
   );
