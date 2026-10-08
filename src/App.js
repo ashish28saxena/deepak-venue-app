@@ -10,7 +10,14 @@ import AboutUs from "./Component/AboutUs";
 import ContactUs from "./Component/ContactUs";
 import Resort from "./Component/Resort";
 import Gardens from "./Component/Gardens";
-import VenueDetail from "./Component/Venuedetail"
+import VenueDetail from "./Component/Venuedetail";
+import VenuList from "./Component/VenueList";
+import BanguetHallsList from "./Component/BanguetHallsList";
+import ResortList from "./Component/ResortList";
+import GardenList from "./Component/GardenList";
+import TermsAndConditions from "./Component/TermsAndConditions";
+import Blog from "./Component/Blog";
+import Auth from "./Component/Auth"
 
 /* Har route change par page top se khule */
 function ScrollToTop() {
@@ -57,20 +64,24 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          <Route path="/venues/banquet-halls" element={<BanquetHalls />} />
-          <Route path="/venues/lawns" element={<VenueCarousel />} />
-          <Route path="/venues/resorts" element={<Resort />} />
-          <Route path="/venues/gardens" element={<Gardens />} />
+          <Route path="/venues/banquet-halls" element={<BanguetHallsList />} />
+          <Route path="/venues/lawns" element={<VenuList />} />
+          <Route path="/venues/resorts" element={<ResortList />} />
+          <Route path="/venues/gardens" element={<GardenList />} />
+          
 
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/about" element={<AboutUs />} />
 
           <Route path="/shortlisted" element={<Placeholder title="My Shortlist" />} />
-          <Route path="/login" element={<Placeholder title="Log in / Sign up" />} />
-          <Route path="/blogs" element={<Placeholder title="Blogs" />} />
-          <Route path="/terms" element={<Placeholder title="Terms & Conditions" />} />
+          <Route path="/login" element={<Auth/>} />
+          <Route path="/blogs" element={<Blog />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
           <Route path="/venues/:type/:slug" element={<VenueDetail />} />
+          
+          
 
           <Route path="*" element={<NotFound />} />
         </Routes>

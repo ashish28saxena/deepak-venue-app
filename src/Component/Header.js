@@ -1,136 +1,4 @@
-// import { useState } from "react";
-// import { Navbar, Container, Button, Dropdown, Offcanvas, Nav } from "react-bootstrap";
-// import {
-//   BiMenu,
-//   BiChevronRight,
-//   BiChevronDown,
-//   BiSearch,
-//   BiUser,
-//   BiTargetLock,
-// } from "react-icons/bi";
-// import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
-// import "./Header.css";
-
-
-// const CITIES = ["Etawah", "Agra", "Kanpur", "Lucknow", "Delhi", "Noida"];
-
-// const MENU_MAIN = ["Venues", "Shortlisted", "Top Cities"];
-// const MENU_INFO = ["About Us", "Contact Us", "Blogs", "Terms & Conditions", "Privacy Policy"];
-
-// export default function Header({ onSearchClick }) {
-//   const [showMenu, setShowMenu] = useState(false);
-//   const [city, setCity] = useState("Etawah");
-
-//   const closeMenu = () => setShowMenu(false);
-
-//   return (
-//     <>
-//       <Navbar className="mh-header" expand={false}>
-//         <Container fluid className="mh-container">
-//           {/* Left: hamburger + logo */}
-//           <div className="d-flex align-items-center gap-3">
-//             <button
-//               type="button"
-//               className="mh-icon-btn"
-//               aria-label="Open menu"
-//               onClick={() => setShowMenu(true)}
-//             >
-//               <BiMenu size={36} />
-//             </button>
-
-//             <Navbar.Brand href="/" className="mh-logo m-0">
-//   <img src="/logo-web.jpeg" alt="Logo" width="100px" height="70px"/>
-// </Navbar.Brand>
-//           </div>
-
-//           {/* Right: search, city, user */}
-//           <div className="d-flex align-items-center gap-3">
-//             <Button
-//               variant="light"
-//               className="mh-pill mh-search d-none d-md-inline-flex"
-//               onClick={onSearchClick}
-//             >
-//               <BiSearch size={20} className="mh-accent" />
-//               <span>Search by locality &amp; type</span>
-//               <BiChevronRight size={18} />
-//             </Button>
-
-//             <Dropdown align="end">
-//               <Dropdown.Toggle variant="light" className="mh-pill mh-city">
-//                 <BiTargetLock size={18} className="mh-accent" />
-//                 <span>{city}</span>
-//               </Dropdown.Toggle>
-//               <Dropdown.Menu className="mh-dropdown">
-//                 {CITIES.map((c) => (
-//                   <Dropdown.Item
-//                     key={c}
-//                     active={c === city}
-//                     onClick={() => setCity(c)}
-//                   >
-//                     {c}
-//                   </Dropdown.Item>
-//                 ))}
-//               </Dropdown.Menu>
-//             </Dropdown>
-
-//             <Dropdown align="end">
-//               <Dropdown.Toggle as="button" className="mh-user" aria-label="Account">
-//                 <BiUser size={34} />
-//                 <BiChevronDown size={18} />
-//               </Dropdown.Toggle>
-//               <Dropdown.Menu className="mh-dropdown">
-//                 <Dropdown.Item href="/login">Login</Dropdown.Item>
-//                 <Dropdown.Item href="/register">Register</Dropdown.Item>
-//               </Dropdown.Menu>
-//             </Dropdown>
-//           </div>
-//         </Container>
-//       </Navbar>
-
-//       {/* Side menu */}
-//       <Offcanvas show={showMenu} onHide={closeMenu} placement="start" className="mh-offcanvas">
-//         <Offcanvas.Header closeButton />
-//         <Offcanvas.Body>
-//           <Nav className="flex-column">
-//             {MENU_MAIN.map((item) => (
-//               <Nav.Link key={item} href="#" className="mh-link" onClick={closeMenu}>
-//                 {item}
-//                 <BiChevronRight size={22} />
-//               </Nav.Link>
-//             ))}
-//           </Nav>
-
-//           <hr className="mh-hr" />
-//           <a href="tel:+918124222266" className="mh-helpline">
-//             Helpline +91 8124222266
-//           </a>
-//           <hr className="mh-hr" />
-
-//           <Nav className="flex-column">
-//             {MENU_INFO.map((item) => (
-//               <Nav.Link key={item} href="#" className="mh-link" onClick={closeMenu}>
-//                 {item}
-//                 <BiChevronRight size={22} />
-//               </Nav.Link>
-//             ))}
-//           </Nav>
-
-//           <hr className="mh-hr" />
-//           <p className="mh-follow">For instant updates follow us on</p>
-//           <div className="d-flex gap-3">
-//             <a href="#" aria-label="Facebook" className="mh-social"><FaFacebookF /></a>
-//             <a href="#" aria-label="Instagram" className="mh-social"><FaInstagram /></a>
-//             <a href="#" aria-label="YouTube" className="mh-social"><FaYoutube /></a>
-//           </div>
-//         </Offcanvas.Body>
-//       </Offcanvas>
-//     </>
-//   );
-// }
-
-
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import HeaderMenu from "./Headermenu";
 import "./Header.css";
 
@@ -190,6 +58,11 @@ const icons = {
       <path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4M10 8l-4 4 4 4M6 12h10" />
     </Icon>
   ),
+  logout: (
+    <Icon>
+      <path d="M10 4H6a2 2 0 00-2 2v12a2 2 0 002 2h4M16 8l4 4-4 4M20 12H10" />
+    </Icon>
+  ),
   check: (
     <Icon size={16}>
       <path d="M5 12l5 5 9-10" />
@@ -210,10 +83,41 @@ const NAV = [
   { label: "Contact Us", href: "/contact" },
 ];
 
-const CITIES = ["Etawah", "Agra", "Kanpur", "Lucknow", "Mainpuri", "Firozabad"];
+/* State -> cities (yahan se edit karo / naye state-city add karo) */
+const STATE_CITIES = {
+  "Uttar Pradesh": ["Etawah", "Agra", "Kanpur", "Lucknow", "Mainpuri", "Firozabad", "Auraiya", "Jhansi", "Varanasi", "Prayagraj"],
+  "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Morena"],
+  Rajasthan: ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bharatpur"],
+  Delhi: ["New Delhi", "Dwarka", "Rohini", "Saket"],
+  Haryana: ["Gurugram", "Faridabad", "Panipat", "Karnal"],
+  Uttarakhand: ["Dehradun", "Haridwar", "Rishikesh", "Haldwani"],
+  Bihar: ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"],
+};
+const STATES = Object.keys(STATE_CITIES);
+const DEFAULT_STATE = "Uttar Pradesh";
+const stateOfCity = (c) => STATES.find((s) => STATE_CITIES[s].includes(c)) || DEFAULT_STATE;
 
 const VENUE_TYPES = ["Banquet Halls", "Lawns", "Resorts", "Marriage Gardens"];
 const LOCALITIES = ["Civil Lines", "Collectorate Road", "Bharthana Road", "Railway Road", "Kachahri Road"];
+
+/* Login ke baad save hua user (sessionStorage pehle, phir localStorage) */
+const getStoredUser = () => {
+  try {
+    const raw = sessionStorage.getItem("user") || localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const clearSession = () => {
+  ["token", "user", "userId"].forEach((k) => {
+    try {
+      sessionStorage.removeItem(k);
+      localStorage.removeItem(k);
+    } catch {}
+  });
+};
 
 /* Bahar click par dropdown band karne ke liye */
 function useOutsideClose(ref, onClose, active) {
@@ -232,7 +136,7 @@ function useOutsideClose(ref, onClose, active) {
 
 export default function Header({
   logo = DEFAULT_LOGO,
-  city = "Etawah",
+  city: cityProp = "Etawah",
   onCityChange,
   onSearch,
   shortlistCount = 0,
@@ -241,6 +145,30 @@ export default function Header({
   const [logoFailed, setLogoFailed] = useState(false);
   const [panel, setPanel] = useState(null); // "search" | "city" | "profile" | null
   const [query, setQuery] = useState("");
+
+  /* Logged-in user (null = logged out) */
+  const [user, setUser] = useState(getStoredUser);
+  const firstName = user?.fullName?.trim().split(" ")[0] || user?.username || "";
+
+  /* Selected city ki value state mein (refresh ke baad bhi yaad rahegi) */
+  const [city, setCity] = useState(() => {
+    try {
+      return localStorage.getItem("city") || cityProp;
+    } catch {
+      return cityProp;
+    }
+  });
+
+  /* Selected state (city usi state ki hoti hai) */
+  const [stateName, setStateName] = useState(() => {
+    try {
+      return localStorage.getItem("state") || stateOfCity(city);
+    } catch {
+      return stateOfCity(city);
+    }
+  });
+  /* Dropdown mein abhi dikh raha state (city click karne par hi save hota hai) */
+  const [draftState, setDraftState] = useState(stateName);
 
   const searchRef = useRef(null);
   const cityRef = useRef(null);
@@ -256,6 +184,13 @@ export default function Header({
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Dusre tab mein login/logout ho to header bhi update ho */
+  useEffect(() => {
+    const sync = () => setUser(getStoredUser());
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
   }, []);
 
   const suggestions = useMemo(() => {
@@ -275,6 +210,32 @@ export default function Header({
 
   const toggle = (name) => setPanel((cur) => (cur === name ? null : name));
 
+  /* City select karne par: state update + save + parent ko batana + dropdown band */
+  const handleCityChange = (c, st) => {
+    const s = st || stateOfCity(c); // HeaderMenu sirf city bhejta hai, to state city se nikal lete hain
+    setCity(c);
+    setStateName(s);
+    setDraftState(s);
+    try {
+      localStorage.setItem("city", c);
+      localStorage.setItem("state", s);
+    } catch {}
+    onCityChange?.(c, s);
+    closePanel();
+  };
+
+  const openCityPanel = () => {
+    setDraftState(stateName); // kholte waqt selected state dikhao
+    toggle("city");
+  };
+
+  const handleLogout = () => {
+    clearSession();
+    setUser(null);
+    closePanel();
+    window.location.assign("/");
+  };
+
   return (
     <header className={`hd ${scrolled ? "is-scrolled" : ""}`}>
       <div className="hd-inner">
@@ -282,7 +243,7 @@ export default function Header({
         <div className="hd-left">
           <HeaderMenu
             shortlistCount={shortlistCount}
-            onCitySelect={(c) => onCityChange?.(c)}
+            onCitySelect={handleCityChange}
           />
           <a className="hd-logo" href="/" aria-label={`${BRAND_NAME} home`}>
             {logoFailed ? (
@@ -302,18 +263,16 @@ export default function Header({
           ))}
         </nav>
 
-        {/* Right: search, city, profile */}
+        {/* Right: city, profile */}
         <div className="hd-right">
-          
-          
-
           {/* City */}
           <div className="hd-pop" ref={cityRef}>
             <button
               type="button"
               className="hd-pill hd-city"
-              onClick={() => toggle("city")}
+              onClick={openCityPanel}
               aria-expanded={panel === "city"}
+              aria-haspopup="listbox"
             >
               <span className="hd-pill-icon hd-red">{icons.pin}</span>
               <span>{city}</span>
@@ -322,21 +281,36 @@ export default function Header({
 
             {panel === "city" && (
               <div className="hd-panel hd-panel-city">
-                <p className="hd-panel-title">Choose your city</p>
-                <ul className="hd-list">
-                  {CITIES.map((c) => (
-                    <li key={c}>
+                <label className="hd-panel-title" htmlFor="hd-state">
+                  Choose your state
+                </label>
+                <select
+                  id="hd-state"
+                  className="hd-select"
+                  value={draftState}
+                  onChange={(e) => setDraftState(e.target.value)}
+                >
+                  {STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <p className="hd-panel-title">Choose your city in {draftState}</p>
+                <ul className="hd-list hd-city-list" role="listbox" aria-label={`Cities in ${draftState}`}>
+                  {STATE_CITIES[draftState].map((c) => (
+                    <li key={c} role="option" aria-selected={c === city && draftState === stateName}>
                       <button
                         type="button"
-                        className={c === city ? "is-active" : ""}
-                        onClick={() => {
-                          onCityChange?.(c);
-                          closePanel();
-                        }}
+                        className={c === city && draftState === stateName ? "is-active" : ""}
+                        onClick={() => handleCityChange(c, draftState)}
                       >
                         <span className="hd-list-icon">{icons.pin}</span>
                         <span>{c}</span>
-                        {c === city && <span className="hd-tick">{icons.check}</span>}
+                        {c === city && draftState === stateName && (
+                          <span className="hd-tick">{icons.check}</span>
+                        )}
                       </button>
                     </li>
                   ))}
@@ -352,17 +326,29 @@ export default function Header({
               className="hd-profile"
               onClick={() => toggle("profile")}
               aria-expanded={panel === "profile"}
-              aria-label="Account menu"
+              aria-label={user ? `Account menu for ${user.fullName}` : "Account menu"}
             >
               {icons.user}
+              {user && (
+                <span style={{ fontSize: 14, fontWeight: 500, maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {firstName}
+                </span>
+              )}
               <span className={`hd-caret ${panel === "profile" ? "is-up" : ""}`}>{icons.caret}</span>
             </button>
 
             {panel === "profile" && (
               <div className="hd-panel hd-panel-profile">
-                <a className="hd-cta" href="/login">
-                  {icons.login} Log in or sign up
-                </a>
+                {user ? (
+                  <div style={{ padding: "4px 4px 12px", borderBottom: "1px solid rgba(0,0,0,.1)", marginBottom: 8 }}>
+                    <div style={{ fontWeight: 600, fontSize: 15 }}>{user.fullName}</div>
+                    <div style={{ fontSize: 13, opacity: 0.7, overflowWrap: "anywhere" }}>{user.email}</div>
+                  </div>
+                ) : (
+                  <a className="hd-cta" href="/login">
+                    {icons.login} Log in or sign up
+                  </a>
+                )}
                 <ul className="hd-list">
                   <li>
                     <a href="/shortlisted">
@@ -374,9 +360,17 @@ export default function Header({
                   <li>
                     <a href="/contact">
                       <span className="hd-list-icon">{icons.help}</span>
-                      <span>Help & support</span>
+                      <span>Help &amp; support</span>
                     </a>
                   </li>
+                  {user && (
+                    <li>
+                      <button type="button" onClick={handleLogout}>
+                        <span className="hd-list-icon">{icons.logout}</span>
+                        <span>Log out</span>
+                      </button>
+                    </li>
+                  )}
                 </ul>
               </div>
             )}
