@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleShortlist } from "../store/shortlistSlice";
 
 const venues = [
   { id: 1, name: "Prashant Marriage Garden", city: "Etawah", price: null, rating: 4.5, photos: "5+", image: "https://picsum.photos/seed/garden1/700/640" },
@@ -82,13 +84,36 @@ const css = `
 `;
 
 function VenueCard({ v }) {
-  const [saved, setSaved] = useState(false);
+  const dispatch = useDispatch();
+  const userId = useSelector((s) => s.shortlist.userId);
+  const saved = useSelector((s) => s.shortlist.items.some((i) => i.id === v.id));
   const [show, setShow] = useState(false);
+
+  const onShortlist = () => {
+    // Login nahi hai to pehle login page par bhejo
+    if (!userId) {
+      window.location.assign("/login");
+      return;
+    }
+    // Sirf zaroori fields Redux (aur us user ki localStorage key) mein jaati hain
+    dispatch(
+      toggleShortlist({
+        id: v.id,
+        name: v.name,
+        city: v.city,
+        price: v.price,
+        rating: v.rating,
+        photos: v.photos,
+        image: v.image,
+      })
+    );
+  };
+
   return (
     <article className="sm-card">
       <div className="sm-photo">
         <img src={v.image} alt={v.name} loading="lazy" />
-        <button className="sm-save" onClick={() => setSaved(!saved)} aria-pressed={saved}>
+        <button className="sm-save" onClick={onShortlist} aria-pressed={saved}>
           {saved ? "★ Shortlisted" : "☆ Shortlist"}
         </button>
         <div className="sm-rate">★ {v.rating.toFixed(1)}</div>
@@ -117,7 +142,7 @@ function VenueCard({ v }) {
 
 export default function ResortList() {
   const [type, setType] = useState("Resort");
- 
+
   return (
     <div className="sm-page">
       <style>{css}</style>
@@ -126,7 +151,7 @@ export default function ResortList() {
           <h2>{type} in Etawah</h2>
           <span>{venues.length} venues</span>
         </div>
-        
+
         <div className="sm-grid">
           {venues.map((v) => <VenueCard key={v.id} v={v} />)}
         </div>

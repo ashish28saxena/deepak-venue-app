@@ -17,7 +17,8 @@ import ResortList from "./Component/ResortList";
 import GardenList from "./Component/GardenList";
 import TermsAndConditions from "./Component/TermsAndConditions";
 import Blog from "./Component/Blog";
-import Auth from "./Component/Auth"
+import Auth from "./Component/Auth";
+import Shortlisted from "./Component/Shortlisted"
 
 /* Har route change par page top se khule */
 function ScrollToTop() {
@@ -74,12 +75,13 @@ function App() {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/about" element={<AboutUs />} />
 
-          <Route path="/shortlisted" element={<Placeholder title="My Shortlist" />} />
+          <Route path="/shortlisted" element={<Shortlisted />} />
           <Route path="/login" element={<Auth/>} />
           <Route path="/blogs" element={<Blog />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
           <Route path="/venues/:type/:slug" element={<VenueDetail />} />
+          
           
           
 
