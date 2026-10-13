@@ -19,6 +19,8 @@ import TermsAndConditions from "./Component/TermsAndConditions";
 import Blog from "./Component/Blog";
 import Auth from "./Component/Auth";
 import Shortlisted from "./Component/Shortlisted"
+import VenueForm from "./Component/Venueform"
+import ContactListPage  from "./Component/Contactlistpage"
 
 /* Har route change par page top se khule */
 function ScrollToTop() {
@@ -81,6 +83,10 @@ function App() {
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />
           <Route path="/venues/:type/:slug" element={<VenueDetail />} />
+          <Route path="/add-venue" element={<VenueForm />} />
+          <Route path="/lead" element={<ContactListPage />} />
+          
+          
           
           
           

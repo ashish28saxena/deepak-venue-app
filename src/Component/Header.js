@@ -74,6 +74,8 @@ const icons = {
 const BRAND_NAME = "Shubhlagnmart";
 const DEFAULT_LOGO = "/logo-web.jpeg";
 
+const user = JSON.parse(sessionStorage.getItem("user") || "null");
+
 const NAV = [
   { label: "Banquet Halls", href: "/venues/banquet-halls" },
   { label: "Lawns", href: "/venues/lawns" },
@@ -81,6 +83,12 @@ const NAV = [
   { label: "Gardens", href: "/venues/gardens" },
   { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },
+
+  ...(user?.email === "admin@gmail.com"
+    ? [{ label: "Add Venue", href: "/add-venue" },
+      { label: "Lead", href: "/lead" }
+    ]
+    : []),
 ];
 
 /* State -> cities (yahan se edit karo / naye state-city add karo) */

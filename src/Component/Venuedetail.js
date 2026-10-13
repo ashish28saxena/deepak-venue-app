@@ -1,51 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./Venuedetail.css";
 
-
-export const VENUES = {
-  "gayatridham-vatika": {
-    name: "Gayatridham Vatika",
-    type: "Lawns",
-    typeHref: "/venues/lawns",
-    city: "Etawah",
-    address: "Manikpur Mohan, Uttar Pradesh 206003",
-    price: "₹50,000",
-    priceUnit: "Per Day",
-    rating: 4.5,
-    phone: "+91 8124222266",
-    images: ["https://picsum.photos/seed/garden1/700/640", "https://picsum.photos/seed/garden2/700/640", "https://picsum.photos/seed/garden3/700/640"],
-    highlights: ["300 Hall capacity", "20 car parking", "Air conditioning", "7 Rooms"],
-    amenities: [
-      "7 Rooms available",
-      "7 AC Rooms",
-      "20 Car parking",
-      "Electricity Back-up",
-      "Bridal Room",
-      "Parking",
-    ],
-    info: [
-      "Property Type - Lawn",
-      "Price Type - Time Based Rent",
-      "Valet Parking - Yes",
-      "Allowed Cuisine - Veg",
-    ],
-    policies: [
-      "Outside Decorators allowed",
-      "Outside DJ allowed",
-      "Outside Catering not allowed",
-      "Alcohol not allowed",
-    ],
-    payments: [
-      "50% advance to confirm the booking",
-      "Balance payable before the event",
-      "Cancellation: advance is non-refundable",
-    ],
-    albums: [],
-  },
-};
-
-
+const API_BASE = "http://localhost:5000/api/venues";
 
 const TABS = [
   { id: "amenities", label: "Venue Amenities" },
@@ -54,6 +11,75 @@ const TABS = [
   { id: "payments", label: "Payment Policies" },
   { id: "albums", label: "Albums" },
 ];
+
+const ALBUM_LABELS = {
+  images: "Photos",
+  entranceExterior: "Entrance & Exterior",
+  foodCatering: "Food & Catering",
+  stageMandap: "Stage & Mandap",
+  banquetHall: "Banquet Hall",
+};
+
+/* ---------- API data -> UI shape ---------- */
+const formatPrice = (n) => `₹${Number(n).toLocaleString("en-IN")}`;
+
+function mapVenue(d) {
+  // albums: [{ images: [], entranceExterior: [...], ... }] -> [{ key, label, images }]
+  const albumObj = Array.isArray(d.albums) ? d.albums[0] || {} : d.albums || {};
+  const albumGroups = Object.entries(albumObj)
+    .filter(([, urls]) => Array.isArray(urls) && urls.length)
+    .map(([key, urls]) => ({ key, label: ALBUM_LABELS[key] || key, images: urls }));
+
+  // gallery ke liye sabhi photos (duplicates hata ke)
+  const images = [...new Set(albumGroups.flatMap((g) => g.images))];
+
+  const am = d.amenities || {};
+  const amenities = [];
+  if (d.totalRooms) amenities.push(`${d.totalRooms} Rooms available`);
+  if (d.acRooms) amenities.push(`${d.acRooms} AC Rooms`);
+  if (d.carParking) amenities.push(`${d.carParking} Car parking`);
+  if (am.airConditioning) amenities.push("Air conditioning");
+  if (am.bridalRoom) amenities.push("Bridal Room");
+  if (am.parking) amenities.push("Parking");
+  if (am.valetParking) amenities.push("Valet Parking");
+
+  const highlights = [];
+  if (d.hallCapacity) highlights.push(`${d.hallCapacity} Hall capacity`);
+  if (d.carParking) highlights.push(`${d.carParking} car parking`);
+  if (d.acRooms) highlights.push(`${d.acRooms} AC rooms`);
+  if (d.totalRooms) highlights.push(`${d.totalRooms} Rooms`);
+
+  const info = [
+    d.propertyType && `Property Type - ${d.propertyType}`,
+    d.priceType && `Price Type - ${d.priceType}`,
+    `Valet Parking - ${am.valetParking ? "Yes" : "No"}`,
+    d.allowedCuisine && `Allowed Cuisine - ${d.allowedCuisine}`,
+    d.establishedYear && `Established - ${d.establishedYear}`,
+    d.weddingsDone && `Weddings done - ${d.weddingsDone}`,
+    d.yearsInBusiness && `Years in business - ${d.yearsInBusiness}`,
+  ].filter(Boolean);
+
+  return {
+    name: d.venueName,
+    type: d.propertyType,
+    typeHref: `/venues/${(d.propertyType || "").toLowerCase()}s`,
+    city: d.city,
+    address: d.address,
+    price: formatPrice(d.pricePerPlate),
+    priceUnit: d.priceType,
+    rating: d.rating,
+    phone: d.phone,
+    images,
+    highlights,
+    amenities,
+    info,
+    policies: d.policies || [], // API mein abhi policies nahi hain
+    payments: d.paymentPolicy ? [d.paymentPolicy] : [],
+    about: d.aboutVenue,
+    detail: d.detailInformation,
+    albumGroups,
+  };
+}
 
 /* ---------- Icons ---------- */
 const Icon = ({ children, size = 16 }) => (
@@ -121,7 +147,6 @@ const I = {
 /* ---------- Sub components ---------- */
 function Gallery({ images, rating, alt }) {
   const [i, setI] = useState(0);
-  const [broken, setBroken] = useState({});
   const go = (d) => setI((cur) => (cur + d + images.length) % images.length);
 
   return (
@@ -129,11 +154,7 @@ function Gallery({ images, rating, alt }) {
       {!images.length ? (
         <div className="vd-noimg">Photo coming soon</div>
       ) : (
-        <img
-          src={images[i]}
-          alt={`${alt} - photo ${i + 1}`}
-          onError={() => setBroken((b) => ({ ...b, [i]: true }))}
-        />
+        <img src={images[i]} alt={`${alt} - photo ${i + 1}`} />
       )}
 
       {images.length > 1 && (
@@ -179,21 +200,124 @@ const List = ({ items, empty }) =>
     <p className="vd-empty">{empty}</p>
   );
 
+/* Albums slider: ek hi slider, sabhi categories ki photos, swipe + arrows + dots */
+function AlbumSlider({ groups, name }) {
+  const slides = groups.flatMap((g) => g.images.map((src) => ({ src, key: g.key, label: g.label })));
+  const [i, setI] = useState(0);
+  const touchX = useRef(null);
+  const total = slides.length;
+
+  const go = (d) => setI((cur) => (cur + d + total) % total);
+  const jumpTo = (key) => setI(slides.findIndex((s) => s.key === key));
+
+  const onTouchStart = (e) => (touchX.current = e.touches[0].clientX);
+  const onTouchEnd = (e) => {
+    if (touchX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    touchX.current = null;
+  };
+
+  return (
+    <div className="vd-as">
+      <div className="vd-as-chips">
+        {groups.map((g) => (
+          <button
+            key={g.key}
+            type="button"
+            className={slides[i].key === g.key ? "is-active" : ""}
+            onClick={() => jumpTo(g.key)}
+          >
+            {g.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="vd-as-view" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div className="vd-as-track" style={{ transform: `translateX(-${i * 100}%)` }}>
+          {slides.map((s, n) => (
+            <div className="vd-as-slide" key={`${s.key}-${n}`}>
+              <img src={s.src} alt={`${name} ${s.label} ${n + 1}`} loading={n === 0 ? "eager" : "lazy"} />
+            </div>
+          ))}
+        </div>
+
+        {total > 1 && (
+          <>
+            <button type="button" className="vd-as-btn vd-as-prev" onClick={() => go(-1)} aria-label="Previous photo">
+              {I.left}
+            </button>
+            <button type="button" className="vd-as-btn vd-as-next" onClick={() => go(1)} aria-label="Next photo">
+              {I.right}
+            </button>
+          </>
+        )}
+
+        <span className="vd-as-count">
+          {i + 1} / {total}
+        </span>
+      </div>
+
+      {total > 1 && (
+        <div className="vd-as-dots">
+          {slides.map((_, n) => (
+            <button
+              key={n}
+              type="button"
+              className={n === i ? "is-active" : ""}
+              onClick={() => setI(n)}
+              aria-label={`Show photo ${n + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------- Page ---------- */
 export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
-  const { slug } = useParams();
- // const venue = VENUES[slug];
-  const venue=VENUES["gayatridham-vatika"]
+  const { slug } = useParams(); // route: /venue/:slug  -> slug = venue ka _id
+
+  const [venue, setVenue] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const [tab, setTab] = useState("amenities");
   const [showPhone, setShowPhone] = useState(false);
   const [copied, setCopied] = useState(false);
   const [localSaved, setLocalSaved] = useState(false);
 
+  /* Fetch venue */
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const load = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(`${API_BASE}/${slug}`, { signal: controller.signal });
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "Venue not found");
+        }
+        setVenue(mapVenue(json.data));
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+          setVenue(null);
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+
+    load();
+    return () => controller.abort();
+  }, [slug]);
+
   const saved = onToggleShortlist ? shortlist.includes(slug) : localSaved;
   const toggleSave = () => (onToggleShortlist ? onToggleShortlist(slug) : setLocalSaved((s) => !s));
-
-  
 
   const share = async () => {
     const url = window.location.href;
@@ -215,11 +339,19 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
     document.getElementById(`vd-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  if (!venue) {
+  if (loading) {
     return (
       <main className="vd vd-notfound">
-        <h2>Venue not found {slug}</h2>
-        <p>Ye venue ab available nahi hai ya link galat hai.</p>
+        <p>Loading venue...</p>
+      </main>
+    );
+  }
+
+  if (error || !venue) {
+    return (
+      <main className="vd vd-notfound">
+        <h2>Venue not found</h2>
+        <p>{error || "Ye venue ab available nahi hai ya link galat hai."}</p>
         <Link to="/">Go to Home</Link>
       </main>
     );
@@ -227,7 +359,6 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
 
   return (
     <main className="vd">
-      
       <section className="vd-card vd-top">
         <Gallery images={venue.images} rating={venue.rating} alt={venue.name} />
 
@@ -278,6 +409,14 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
       {/* Body */}
       <div className="vd-body">
         <div className="vd-main">
+          {(venue.about || venue.detail) && (
+            <section className="vd-section">
+              <h2>About {venue.name}</h2>
+              {venue.about && <p>{venue.about}</p>}
+              {venue.detail && <p>{venue.detail}</p>}
+            </section>
+          )}
+
           <div className="vd-tabs" role="tablist">
             {TABS.map((t) => (
               <button
@@ -315,19 +454,13 @@ export default function VenueDetail({ shortlist = [], onToggleShortlist }) {
 
           <section id="vd-albums" className="vd-section">
             <h2>Albums</h2>
-            {venue.albums.length ? (
-              <div className="vd-albums">
-                {venue.albums.map((src, n) => (
-                  <img key={src} src={src} alt={`${venue.name} album ${n + 1}`} loading="lazy" />
-                ))}
-              </div>
+            {venue.albumGroups.length ? (
+              <AlbumSlider groups={venue.albumGroups} name={venue.name} />
             ) : (
               <p className="vd-empty">Albums will be added soon.</p>
             )}
           </section>
         </div>
-
-        
       </div>
     </main>
   );

@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+.vf-page {
+  --ink: #1d1b20;
+  --muted: #6b6672;
+  --line: #e6e1e8;
+  --bg: #faf7f9;
+  --accent: #e8325f;
+  --accent-dark: #c92550;
+  --ok: #1f7a4d;
+  --bad: #b3261e;
+  font-family: "Poppins", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 32px 16px 64px;
+}
+
+.vf-form {
+  max-width: 860px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.vf-form h1 { margin: 0 0 4px; font-size: 26px; font-weight: 600; }
+.vf-sub { margin: 0 0 24px; color: var(--muted); font-size: 14px; }
+
+.vf-form fieldset { border: 0; border-top: 1px solid var(--line); margin: 0; padding: 20px 0 8px; }
+.vf-form legend { font-size: 16px; font-weight: 600; padding: 0 12px 0 0; }
+.vf-hint { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+
+.vf-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; }
+.vf-span2 { grid-column: span 2; }
+
+.vf-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.vf-grid .vf-field { margin-bottom: 0; }
+.vf-field label { font-size: 13px; font-weight: 500; }
+.vf-req { color: var(--accent); }
+
+.vf-field input,
+.vf-field select,
+.vf-field textarea {
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+.vf-field textarea { resize: vertical; }
+.vf-field input:focus,
+.vf-field select:focus,
+.vf-field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+.vf-field.has-error input,
+.vf-field.has-error select { border-color: var(--bad); }
+.vf-err { font-size: 12px; color: var(--bad); }
+
+.vf-checks { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 16px; }
+.vf-check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.vf-check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+.vf-alert { padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; }
+.vf-alert.success { background: #e7f5ee; color: var(--ok); }
+.vf-alert.error { background: #fdecea; color: var(--bad); }
+
+.vf-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; border-top: 1px solid var(--line); padding-top: 24px; }
+.vf-btn {
+  font: inherit; font-size: 14px; font-weight: 500;
+  padding: 11px 22px; border-radius: 8px; border: 1px solid var(--accent);
+  background: var(--accent); color: #fff; cursor: pointer;
+}
+.vf-btn:hover:not(:disabled) { background: var(--accent-dark); }
+.vf-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.vf-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.vf-btn.ghost { background: #fff; color: var(--ink); border-color: var(--line); }
+.vf-btn.ghost:hover { background: var(--bg); }
+
+@media (max-width: 640px) {
+  .vf-form { padding: 20px; }
+  .vf-grid { grid-template-columns: 1fr; }
+  .vf-span2 { grid-column: auto; }
+  .vf-actions { flex-direction: column-reverse; }
+}
+
+/* Album image upload */
+.vf-album { min-width: 0; }
+.vf-count { color: var(--muted); font-weight: 400; }
+.vf-album input[type="file"] { padding: 8px; font-size: 13px; background: var(--bg); border-style: dashed; cursor: pointer; }
+.vf-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; margin-top: 4px; }
+.vf-thumb { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.vf-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vf-thumb button {
+  position: absolute; top: 4px; right: 4px; width: 22px; height: 22px;
+  border: 0; border-radius: 50%; background: rgba(29, 27, 32, 0.8); color: #fff;
+  font-size: 15px; line-height: 1; cursor: pointer; padding: 0;
+}
+.vf-thumb button:hover { background: var(--bad); }
+.vf-thumb button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

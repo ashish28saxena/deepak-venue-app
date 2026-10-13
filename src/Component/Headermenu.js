@@ -149,10 +149,29 @@ const SOCIALS = [
   { label: "YouTube", href: "#", icon: icons.youtube },
 ];
 
+/* Logged-in user ko localStorage se padhta hai (key apne hisaab se badal lena) */
+const getStoredUser = () => {
+  try {
+    return JSON.parse(sessionStorage.getItem("user") || "null");
+  } catch {
+    return null;
+  }
+};
+
 /* ---------- Component ---------- */
-function HeaderMenu({ onCitySelect, shortlistCount = 0 }) {
+function HeaderMenu({ onCitySelect, shortlistCount = 0, user: userProp, onLogout }) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(null);
+  const [storedUser, setStoredUser] = useState(getStoredUser);
+
+  // Menu kholte waqt latest user dobara padho (login ke turant baad bhi sahi dikhega)
+  useEffect(() => {
+    if (open) setStoredUser(getStoredUser());
+  }, [open]);
+
+  const user = userProp ?? storedUser;
+  const displayName = user?.fullName || user?.name || user?.email?.split("@")[0];
+  const firstName = displayName?.split(" ")[0];
 
   // Escape se band ho + background scroll lock
   useEffect(() => {
@@ -169,6 +188,14 @@ function HeaderMenu({ onCitySelect, shortlistCount = 0 }) {
 
   const toggle = (id) => setExpanded((cur) => (cur === id ? null : id));
   const close = () => setOpen(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setStoredUser(null);
+    onLogout?.();
+    setOpen(false);
+  };
 
   return (
     <>
@@ -199,16 +226,35 @@ function HeaderMenu({ onCitySelect, shortlistCount = 0 }) {
         <div className="hm-top">
           <div className="hm-welcome">
             <span className="hm-avatar">
-              <Icon size={22}>
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 21c1-4 4.5-6 8-6s7 2 8 6" />
-              </Icon>
+              {displayName ? (
+                <b>{displayName.charAt(0).toUpperCase()}</b>
+              ) : (
+                <Icon size={22}>
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21c1-4 4.5-6 8-6s7 2 8 6" />
+                </Icon>
+              )}
             </span>
             <div>
-              <p className="hm-welcome-title">Welcome!</p>
-              <a className="hm-welcome-link" href="/login" onClick={close}>
-                Log in or sign up
-              </a>
+              {displayName ? (
+                <>
+                  <p className="hm-welcome-title">Hi, {firstName}!</p>
+                  <button
+                    type="button"
+                    className="hm-welcome-link"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="hm-welcome-title">Welcome!</p>
+                  <a className="hm-welcome-link" href="/login" onClick={close}>
+                    Log in or sign up
+                  </a>
+                </>
+              )}
             </div>
           </div>
           <button

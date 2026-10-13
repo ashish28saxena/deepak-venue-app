@@ -1,0 +1,93 @@
+/* ===== Album main slider ===== */
+.vd-aslider { display: flex; flex-direction: column; gap: 12px; }
+
+.vd-achips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.vd-achips button {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.vd-achips button span { opacity: 0.6; font-size: 12px; }
+.vd-achips button.is-active { background: #111; color: #fff; border-color: #111; }
+
+.vd-astage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  max-height: 460px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #eee;
+}
+.vd-astage > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.vd-acount {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 12px;
+}
+
+.vd-athumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.vd-athumbs button {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 60px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: 0.6;
+  cursor: pointer;
+  background: none;
+}
+.vd-athumbs button.is-active { border-color: #111; opacity: 1; }
+.vd-athumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===== Per-category slider rows ===== */
+.vd-rows { display: flex; flex-direction: column; gap: 22px; margin-top: 24px; }
+
+.vd-row-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.vd-row-head h3 { margin: 0; font-size: 16px; }
+.vd-row-head h3 span { opacity: 0.6; font-size: 13px; font-weight: 400; }
+
+.vd-row-btns { display: flex; gap: 8px; }
+.vd-row-btns button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+.vd-row-btns button:hover { background: #111; color: #fff; border-color: #111; }
+
+.vd-row-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.vd-row-track::-webkit-scrollbar { display: none; }
+.vd-row-track img {
+  flex: 0 0 calc(50% - 6px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 600px) {
+  .vd-row-track img { flex-basis: 80%; }
+}

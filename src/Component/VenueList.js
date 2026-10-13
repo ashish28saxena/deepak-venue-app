@@ -1,37 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleShortlist } from "../store/shortlistSlice";
+import { Link } from "react-router-dom";
+const API_URL = "http://localhost:5000/api/venues/";
+const PLACEHOLDER = "https://picsum.photos/seed/venue-placeholder/700/640";
 
-const venues = [
-  { id: 1, name: "Prashant Marriage Garden", city: "Etawah", price: null, rating: 4.5, photos: "5+", image: "https://picsum.photos/seed/garden1/700/640" },
-  { id: 2, name: "Manas Shehnai Sthal Resort", city: "Etawah", price: 80000, rating: 4.5, photos: "7+", image: "https://picsum.photos/seed/garden2/700/640" },
-  { id: 3, name: "Royal Palace Lawn", city: "Etawah", price: 70000, rating: 4.5, photos: "7+", image: "https://picsum.photos/seed/garden3/700/640" },
-  { id: 4, name: "Shiv Vatika Lawn", city: "Etawah", price: 55000, rating: 4.3, photos: "6+", image: "https://picsum.photos/seed/garden4/700/640" },
-  { id: 5, name: "Anand Vatika Lawn", city: "Etawah", price: 90000, rating: 4.6, photos: "8+", image: "https://picsum.photos/seed/garden5/700/640" },
-  { id: 6, name: "Krishna Palace Banquet", city: "Etawah", price: 65000, rating: 4.2, photos: "5+", image: "https://picsum.photos/seed/garden6/700/640" },
-  { id: 7, name: "Sagar Resort & Lawn", city: "Etawah", price: 120000, rating: 4.7, photos: "9+", image: "https://picsum.photos/seed/garden7/700/640" },
-  { id: 8, name: "Ganga Jamuna Garden", city: "Etawah", price: 45000, rating: 4.4, photos: "6+", image: "https://picsum.photos/seed/garden8/700/640" },
-  { id: 9, name: "Shree Ram Vatika", city: "Etawah", price: null, rating: 4.1, photos: "7+", image: "https://picsum.photos/seed/garden9/700/640" },
-  { id: 10, name: "Grand Regency Banquet", city: "Etawah", price: 60000, rating: 4.8, photos: "10+", image: "https://picsum.photos/seed/garden10/700/640" },
-  { id: 11, name: "Maa Durga Marriage Lawn", city: "Etawah", price: 52000, rating: 4.3, photos: "6+", image: "https://picsum.photos/seed/garden11/700/640" },
-  { id: 12, name: "Lakshmi Palace", city: "Etawah", price: 95000, rating: 4.6, photos: "8+", image: "https://picsum.photos/seed/garden12/700/640" },
-  { id: 13, name: "Green Valley Resort", city: "Etawah", price: 110000, rating: 4.7, photos: "9+", image: "https://picsum.photos/seed/garden13/700/640" },
-  { id: 14, name: "Sharda Marriage Home", city: "Etawah", price: null, rating: 4.0, photos: "5+", image: "https://picsum.photos/seed/garden14/700/640" },
-  { id: 15, name: "Radhika Garden", city: "Etawah", price: 48000, rating: 4.2, photos: "6+", image: "https://picsum.photos/seed/garden15/700/640" },
-  { id: 16, name: "Ashirwad Lawn", city: "Etawah", price: 58000, rating: 4.4, photos: "7+", image: "https://picsum.photos/seed/garden16/700/640" },
-  { id: 17, name: "Star Banquet Hall", city: "Etawah", price: 72000, rating: 4.5, photos: "8+", image: "https://picsum.photos/seed/garden17/700/640" },
-  { id: 18, name: "Kesar Vatika", city: "Etawah", price: 40000, rating: 4.1, photos: "5+", image: "https://picsum.photos/seed/garden18/700/640" },
-  { id: 19, name: "Moti Mahal Lawn", city: "Etawah", price: 85000, rating: 4.6, photos: "9+", image: "https://picsum.photos/seed/garden19/700/640" },
-  { id: 20, name: "Sunrise Resort", city: "Etawah", price: 130000, rating: 4.8, photos: "10+", image: "https://picsum.photos/seed/garden20/700/640" },
-  { id: 21, name: "Jai Maa Vatika", city: "Etawah", price: 50000, rating: 4.3, photos: "6+", image: "https://picsum.photos/seed/garden21/700/640" },
-  { id: 22, name: "Rajdhani Banquet", city: "Etawah", price: 68000, rating: 4.4, photos: "7+", image: "https://picsum.photos/seed/garden22/700/640" },
-  { id: 23, name: "Yamuna View Garden", city: "Etawah", price: null, rating: 4.2, photos: "5+", image: "https://picsum.photos/seed/garden23/700/640" },
-  { id: 24, name: "Chandra Palace", city: "Etawah", price: 78000, rating: 4.5, photos: "8+", image: "https://picsum.photos/seed/garden24/700/640" },
-  { id: 25, name: "Silver Oak Lawn", city: "Etawah", price: 62000, rating: 4.3, photos: "6+", image: "https://picsum.photos/seed/garden25/700/640" },
-  { id: 26, name: "Vrindavan Garden", city: "Etawah", price: 56000, rating: 4.4, photos: "7+", image: "https://picsum.photos/seed/garden26/700/640" },
-  { id: 27, name: "Shubh Aashirwad Banquet", city: "Etawah", price: 88000, rating: 4.6, photos: "9+", image: "https://picsum.photos/seed/garden27/700/640" },
-  { id: 28, name: "Dream Land Resort", city: "Etawah", price: 105000, rating: 4.7, photos: "10+", image: "https://picsum.photos/seed/garden28/700/640" },
-  { id: 29, name: "Om Sai Vatika", city: "Etawah", price: 42000, rating: 4.0, photos: "5+", image: "https://picsum.photos/seed/garden29/700/640" },
-  { id: 30, name: "Heritage Lawn", city: "Etawah", price: 75000, rating: 4.5, photos: "8+", image: "https://picsum.photos/seed/garden30/700/640" },
-];
+function normalizeVenue(x) {
+  const a = x.amenities || null;
+
+  const images = (x.albums || [])
+    .flatMap((album) => Object.values(album).filter(Array.isArray).flat())
+    .filter((src) => typeof src === "string" && src.startsWith("http"));
+
+  const priceType = (x.priceType || "").toLowerCase();
+
+  return {
+    id: x.id || x._id,
+    name: x.name || x.venueName || "Unnamed venue",
+    city: x.city || "",
+    address: x.address || "",
+    type: x.propertyType || "Banquet Hall",
+    price: Number(x.pricePerPlate) || null,
+    priceUnit: priceType.includes("plate") ? "per plate" : priceType ? priceType : "",
+    rating: Number(x.rating) || 0,
+    capacity: x.hallCapacity || null,
+    parking: x.carParking || null,
+    rooms: x.totalRooms ?? x.rooms ?? 0,
+    ac: a ? !!a.airConditioning : !!x.airConditioning,
+    cuisine: x.allowedCuisine || "",
+    phone: x.phone || x.phoneNumber || "",
+    images,
+    image: images[0] || PLACEHOLDER,
+  };
+}
 
 const css = `
 .sm-page{font-family:'Poppins',system-ui,sans-serif;background:#faf6f1;min-height:100vh;padding:32px 20px;color:#2a1a1a}
@@ -39,76 +40,176 @@ const css = `
 .sm-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;flex-wrap:wrap;gap:8px}
 .sm-head h2{margin:0;font-size:28px;font-weight:600;color:#6b1a2a}
 .sm-head span{font-size:14px;color:#7d6a6a}
-.sm-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.sm-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
 .sm-pill{border:1px solid #d9c9b8;background:#fff;border-radius:999px;padding:8px 16px;font:500 14px 'Poppins',sans-serif;cursor:pointer;color:#2a1a1a}
 .sm-pill.on{background:#6b1a2a;color:#fff;border-color:#6b1a2a}
-.sm-pill:focus-visible,.sm-btn:focus-visible,.sm-save:focus-visible{outline:3px solid #c9962b;outline-offset:2px}
+.sm-select{border:1px solid #d9c9b8;background:#fff;border-radius:999px;padding:8px 14px;font:500 14px 'Poppins',sans-serif;color:#2a1a1a}
+.sm-pill:focus-visible,.sm-btn:focus-visible,.sm-save:focus-visible,.sm-select:focus-visible{outline:3px solid #c9962b;outline-offset:2px}
 .sm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
 .sm-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(107,26,42,.08);display:flex;flex-direction:column}
 .sm-photo{position:relative;aspect-ratio:4/3;background:#eadfd2}
 .sm-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .sm-rate{position:absolute;left:0;bottom:0;background:#2f7d4f;color:#fff;font-weight:600;font-size:13px;padding:5px 12px 5px 10px;border-top-right-radius:12px}
+.sm-count{position:absolute;right:0;bottom:0;background:rgba(30,15,15,.62);color:#fff;font-size:12px;padding:5px 10px;border-top-left-radius:12px}
 .sm-save{position:absolute;top:12px;right:12px;background:rgba(30,15,15,.62);color:#fff;border:0;border-radius:10px;padding:8px 12px;font:500 13px 'Poppins',sans-serif;cursor:pointer}
 .sm-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
 .sm-name{margin:0;font-size:16px;font-weight:600}
-.sm-area{font-size:13px;color:#b0392f;text-decoration:underline}
+.sm-area{font-size:13px;color:#b0392f}
 .sm-price{font-size:22px;font-weight:600;color:#2a1a1a}
 .sm-price small{font-size:13px;font-weight:400;color:#7d6a6a;margin-left:4px}
 .sm-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sm-chip{border:1px solid #eadfd2;border-radius:999px;padding:5px 12px;font-size:12.5px;color:#4a3a3a;white-space:nowrap}
-.sm-btn{margin-top:auto;border:0;border-radius:10px;background:#6b1a2a;color:#fff;padding:13px;font:600 14px 'Poppins',sans-serif;cursor:pointer}
+.sm-chip{border:1px solid #eadfd2;border-radius:999px;padding:5px 12px;font-size:12.5px;color:#4a3a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm-btn{margin-top:auto;border:0;border-radius:10px;background:#6b1a2a;color:#fff;padding:13px;font:600 14px 'Poppins',sans-serif;cursor:pointer;text-align:center;text-decoration:none;display:block}
 .sm-btn:hover{background:#561421}
 .sm-btn.shown{background:#fff;color:#6b1a2a;border:1.5px solid #6b1a2a}
+.sm-state{padding:60px 20px;text-align:center;color:#7d6a6a;font-size:15px}
+.sm-state button{margin-top:12px}
 `;
 
 function VenueCard({ v }) {
-  const [saved, setSaved] = useState(false);
+  const dispatch = useDispatch();
+  const userId = useSelector((s) => s.shortlist.userId);
+  const saved = useSelector((s) =>
+    s.shortlist.items.some((item) => item.id === v.id)
+  );
+
   const [show, setShow] = useState(false);
+  const [imgSrc, setImgSrc] = useState(v.image);
+
+  const handleShortlist = () => {
+    if (!userId) {
+      window.location.href = "/login"; // ya navigate("/login")
+      return;
+    }
+    // slice ka toggle add/remove dono sambhalta hai
+    dispatch(
+      toggleShortlist({
+        id: v.id,
+        name: v.name,
+        city: v.city,
+        price: v.price,
+        rating: v.rating,
+        image: v.image,
+      })
+    );
+  };
+
   return (
     <article className="sm-card">
       <div className="sm-photo">
-        <img src={v.image} alt={v.name} loading="lazy" />
-        <button className="sm-save" onClick={() => setSaved(!saved)} aria-pressed={saved}>
+        <img
+          src={imgSrc}
+          alt={v.name}
+          loading="lazy"
+          onError={() => setImgSrc(PLACEHOLDER)}
+        />
+        <button
+          className="sm-save"
+          onClick={handleShortlist}
+          aria-pressed={saved}
+        >
           {saved ? "★ Shortlisted" : "☆ Shortlist"}
         </button>
-        <div className="sm-rate">★ {v.rating.toFixed(1)}</div>
+        {v.rating > 0 && <div className="sm-rate">★ {v.rating.toFixed(1)}</div>}
+        {v.images.length > 1 && <div className="sm-count">{v.images.length} photos</div>}
       </div>
+<Link to={`/venues/banquet-halls/${v.id}`} >
       <div className="sm-body">
         <h3 className="sm-name">{v.name}</h3>
-        <a className="sm-area" href="#">{v.area}</a>
+        <span className="sm-area">{v.city}</span>
+
         {v.price ? (
-          <div className="sm-price">₹{v.price.toLocaleString("en-IN")}<small>{v.unit}</small></div>
+          <div className="sm-price">
+            ₹{v.price.toLocaleString("en-IN")}
+            {v.priceUnit && <small>{v.priceUnit}</small>}
+          </div>
         ) : (
           <div className="sm-price">Contact for details</div>
         )}
+
         <div className="sm-chips">
-          <span className="sm-chip">{v.capacity} Hall capacity</span>
-          <span className="sm-chip">{v.parking} car parking</span>
+          {v.capacity && <span className="sm-chip">{v.capacity} Hall capacity</span>}
+          {v.parking && <span className="sm-chip">{v.parking} car parking</span>}
           {v.ac && <span className="sm-chip">Air conditioning</span>}
-          <span className="sm-chip">{v.rooms} Rooms</span>
+          {v.rooms > 0 && <span className="sm-chip">{v.rooms} Rooms</span>}
+          {v.cuisine && <span className="sm-chip">{v.cuisine}</span>}
         </div>
-        <button className={"sm-btn" + (show ? " shown" : "")} onClick={() => setShow(true)}>
-          {show ? v.phone : "View Phone Number"}
-        </button>
+
+        {show && v.phone ? (
+          <a className="sm-btn shown" href={`tel:${v.phone}`}>{v.phone}</a>
+        ) : (
+          <button className="sm-btn" onClick={() => setShow(true)} disabled={!v.phone}>
+            View Phone Number
+          </button>
+        )}
       </div>
+      </Link>
     </article>
   );
 }
 
 export default function VenueList() {
-  const [type, setType] = useState("Lawns");
- 
+  const [venues, setVenues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
+
+  // ---- API se data fetch ----
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError("");
+
+    fetch(API_URL, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Server error (${res.status})`);
+        return res.json();
+      })
+      .then((json) => {
+        const list = Array.isArray(json) ? json : json.data || [];
+        setVenues(
+          list
+            .map(normalizeVenue)
+            .filter((v) => v.type.toLowerCase().includes("lawn"))
+        );
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") setError(err.message || "Data load nahi ho paya");
+      })
+      .finally(() => setLoading(false));
+
+    return () => controller.abort();
+  }, [reloadKey]);
+
   return (
     <div className="sm-page">
       <style>{css}</style>
       <div className="sm-wrap">
         <div className="sm-head">
-          <h2>{type} in Etawah</h2>
-          <span>{venues.length} venues</span>
+          <h2>Garden</h2>
+          {!loading && !error && <span>{venues.length} venues</span>}
         </div>
-        
+
+        {loading && <div className="sm-state">Venues load ho rahe hain…</div>}
+
+        {error && (
+          <div className="sm-state">
+            Venues load nahi ho paye: {error}
+            <br />
+            <button className="sm-pill" onClick={() => setReloadKey((k) => k + 1)}>
+              Dobara try karein
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && venues.length === 0 && (
+          <div className="sm-state">Koi banquet hall nahi mila.</div>
+        )}
+
         <div className="sm-grid">
-          {venues.map((v) => <VenueCard key={v.id} v={v} />)}
+          {venues.map((v) => (
+            <VenueCard key={v.id} v={v} />
+          ))}
         </div>
       </div>
     </div>

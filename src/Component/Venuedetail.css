@@ -511,3 +511,71 @@
     animation: none !important;
   }
 }
+
+
+/* ===== Albums slider (self-contained, kisi aur class par depend nahi) ===== */
+.vd-as { display: flex; flex-direction: column; gap: 12px; }
+
+.vd-as-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.vd-as-chips::-webkit-scrollbar { display: none; }
+.vd-as-chips button {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.vd-as-chips button.is-active { background: #111; color: #fff; border-color: #111; }
+
+.vd-as-view {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #eee;
+}
+.vd-as-track { display: flex; transition: transform 0.4s ease; }
+.vd-as-slide { flex: 0 0 100%; aspect-ratio: 16 / 10; max-height: 480px; }
+.vd-as-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.vd-as-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.vd-as-prev { left: 12px; }
+.vd-as-next { right: 12px; }
+
+.vd-as-count {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 12px;
+}
+
+.vd-as-dots { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
+.vd-as-dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+}
+.vd-as-dots button.is-active { background: #111; width: 22px; border-radius: 4px; }

@@ -118,13 +118,51 @@ export default function ContactUs({ onSubmit }) {
     return Object.keys(er).length === 0;
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    onSubmit?.(form); // TODO: yahan apni API call lagao
+  // const submit = (e) => {
+  //   e.preventDefault();
+  //   if (!validate()) return;
+  //   onSubmit?.(form); // TODO: yahan apni API call lagao
+  //   setSent(true);
+  //   setForm(EMPTY);
+  // };
+
+  const submit = async (e) => {
+  e.preventDefault();
+
+ 
+
+  try {
+    const response = await fetch("http://localhost:5000/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fullName: form.name,
+        mobileNumber: form.phone,
+        email: form.email || "",
+        
+        subject: form.subject,
+        message: form.message,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      alert(result.message || "Failed to send message");
+      return;
+    }
+
+    onSubmit?.(form);
     setSent(true);
     setForm(EMPTY);
-  };
+
+  } catch (error) {
+    console.error("API Error:", error);
+    alert("Server se connect nahi ho pa raha hai.");
+  }
+};
 
   const cards = [
     {
@@ -232,7 +270,7 @@ export default function ContactUs({ onSubmit }) {
                 </label>
                 <label>
                   What is this about?
-                  <select value={form.topic} onChange={set("topic")}>
+                  <select value={form.topic} onChange={set("subject")}>
                     {TOPICS.map((t) => (
                       <option key={t}>{t}</option>
                     ))}
