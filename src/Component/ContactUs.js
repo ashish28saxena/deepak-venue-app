@@ -106,25 +106,9 @@ export default function ContactUs({ onSubmit }) {
     setErrors((er) => ({ ...er, [key]: undefined }));
   };
 
-  const validate = () => {
-    const er = {};
-    if (form.name.trim().length < 2) er.name = "Please enter your name.";
-    if (!/^[6-9]\d{9}$/.test(form.phone.replace(/\D/g, "").slice(-10))) {
-      er.phone = "Enter a valid 10-digit mobile number.";
-    }
-    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) er.email = "Enter a valid email address.";
-    if (form.message.trim().length < 10) er.message = "Please write at least a short message.";
-    setErrors(er);
-    return Object.keys(er).length === 0;
-  };
 
-  // const submit = (e) => {
-  //   e.preventDefault();
-  //   if (!validate()) return;
-  //   onSubmit?.(form); // TODO: yahan apni API call lagao
-  //   setSent(true);
-  //   setForm(EMPTY);
-  // };
+
+  
 
   const submit = async (e) => {
   e.preventDefault();

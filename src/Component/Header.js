@@ -201,20 +201,9 @@ export default function Header({
     return () => window.removeEventListener("storage", sync);
   }, []);
 
-  const suggestions = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const all = [
-      ...VENUE_TYPES.map((t) => ({ label: t, kind: "Venue type" })),
-      ...LOCALITIES.map((l) => ({ label: l, kind: "Locality" })),
-    ];
-    return q ? all.filter((s) => s.label.toLowerCase().includes(q)) : all;
-  }, [query]);
+  
 
-  const runSearch = (value) => {
-    onSearch?.({ query: value, city });
-    setQuery(value);
-    closePanel();
-  };
+
 
   const toggle = (name) => setPanel((cur) => (cur === name ? null : name));
 
