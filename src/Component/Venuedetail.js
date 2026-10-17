@@ -154,7 +154,7 @@ function Gallery({ images, rating, alt }) {
       {!images.length ? (
         <div className="vd-noimg">Photo coming soon</div>
       ) : (
-        <img src={images[i]} alt={`${alt} - photo ${i + 1}`} />
+        <img src={images[i]}  />
       )}
 
       {images.length > 1 && (
