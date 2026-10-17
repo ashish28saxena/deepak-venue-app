@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect,  useRef, useState } from "react";
 import HeaderMenu from "./Headermenu";
 import "./Header.css";
 
@@ -105,8 +105,7 @@ const STATES = Object.keys(STATE_CITIES);
 const DEFAULT_STATE = "Uttar Pradesh";
 const stateOfCity = (c) => STATES.find((s) => STATE_CITIES[s].includes(c)) || DEFAULT_STATE;
 
-const VENUE_TYPES = ["Banquet Halls", "Lawns", "Resorts", "Marriage Gardens"];
-const LOCALITIES = ["Civil Lines", "Collectorate Road", "Bharthana Road", "Railway Road", "Kachahri Road"];
+
 
 /* Login ke baad save hua user (sessionStorage pehle, phir localStorage) */
 const getStoredUser = () => {
@@ -152,7 +151,7 @@ export default function Header({
   const [scrolled, setScrolled] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
   const [panel, setPanel] = useState(null); // "search" | "city" | "profile" | null
-  const [query, setQuery] = useState("");
+  
 
   /* Logged-in user (null = logged out) */
   const [user, setUser] = useState(getStoredUser);
